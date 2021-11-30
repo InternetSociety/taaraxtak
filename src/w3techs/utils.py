@@ -229,7 +229,7 @@ def weighted_gini(marketshares: pd.Series, population_shares: pd.Series) -> floa
     '''
     Produce a gini in which marketshares are weighted by share of the population.
     '''
-    weighted = marketshares / population_shares
+    weighted = marketshares * population_shares
     vs = weighted.fillna(0).values
     return gini(vs)
 

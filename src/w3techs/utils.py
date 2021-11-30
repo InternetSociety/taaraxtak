@@ -251,10 +251,10 @@ def country_gini(cur: cursor, measurement_scope: str, market: str, time: pd.Time
     merged = pd.DataFrame(pop_share_df).merge(by_juris,
                                               left_index=True,
                                               right_on='jurisdiction_alpha2',
-                                              how='left')
-    # we include countries that do  NOT appear in our scraped data.
-    # the intention here is to get the gini among ALL countries,
-    # including those that provide no internet services.
+                                              how='inner')
+    # we do not include countries that do NOT appear in our scraped data.
+    # the intention here is to get the gini among only countries that provide services,
+    # excluding those that provide no services.
     g = weighted_gini(
         merged['marketshare'],
         merged[relevant_year],
@@ -295,8 +295,8 @@ def country_marketshare(cur: cursor, measurement_scope: str, market: str, time: 
                                               right_on='jurisdiction_alpha2',
                                               how='inner')
     # we do not include countries that do NOT appear in our scraped data.
-    # the intention here is to get the gini among ALL countries,
-    # including those that provide no internet services.
+    # the intention here is to get the gini among only countries that provide services,
+    # excluding those that provide no services.
     merged.rename(columns = {'marketshare':'cc_marketshare'}, inplace = True)
     merged["cc_weighted_marketshare"] = merged.cc_marketshare * merged.loc[:, relevant_year]
     merged["total_marketshare"] = merged.cc_marketshare.sum()

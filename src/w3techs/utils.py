@@ -298,7 +298,7 @@ def country_marketshare(cur: cursor, measurement_scope: str, market: str, time: 
     # the intention here is to get the gini among only countries that provide services,
     # excluding those that provide no services.
     merged.rename(columns = {'marketshare':'cc_marketshare'}, inplace = True)
-    merged["cc_weighted_marketshare"] = merged.cc_marketshare * merged.loc[:, relevant_year]
+    merged["cc_weighted_marketshare"] = merged.cc_marketshare / merged.loc[:, relevant_year]
     merged["total_marketshare"] = merged.cc_marketshare.sum()
     merged["date"] = pd.to_datetime(time)
     merged.reset_index(inplace=True)

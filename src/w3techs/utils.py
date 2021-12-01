@@ -169,6 +169,7 @@ def fetch_rows(cur: cursor, measurement_scope: str, market: str,  date: pd.Times
         WHERE measurement_scope = '{measurement_scope}'
         AND market = '{market}'
         AND time BETWEEN timestamp '{date}' - interval '24 hour' AND  '{date}'
+        AND marketshare != 0
     ''')
     return to_df(cur.fetchall())
 

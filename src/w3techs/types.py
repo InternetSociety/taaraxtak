@@ -14,6 +14,8 @@ import src.shared.types as shared_types
 
 import pandas as pd
 
+def is_float_0(my_float: float) -> bool:
+    return (type(my_float) == float) & (my_float >= 0)
 
 def is_float_0_1(my_float: float) -> bool:
     return (type(my_float) == float) & (my_float >= 0) & (my_float <= 1)
@@ -134,6 +136,7 @@ class CountryMarketshare():
                  measurement_scope: str,
                  market: str,
                  cc_marketshare: float,
+                 cc_marketshare_weighted: float,
                  cc_weighted_marketshare: float,
                  total_marketshare: float):
         assert(type(date) == pd.Timestamp)
@@ -155,6 +158,9 @@ class CountryMarketshare():
         assert(is_float_0_1(cc_marketshare))
         self.cc_marketshare = cc_marketshare
 
+        assert(is_float_0(cc_marketshare_weighted))
+        self.cc_marketshare_weighted = cc_marketshare_weighted
+        
         assert(is_float_0_1(cc_weighted_marketshare))
         self.cc_weighted_marketshare = cc_weighted_marketshare
 
@@ -204,7 +210,7 @@ class CountryMarketshare():
         return
 
     def __str__(self):
-        return f'{self.date} {self.jurisdiction_alpha2} {self.measurement_scope} {self.market} {self.cc_marketshare} {self.cc_weighted_marketshare} {self.total_marketshare}'
+        return f'{self.date} {self.jurisdiction_alpha2} {self.measurement_scope} {self.market} {self.cc_marketshare} {self.cc_marketshare_weighted} {self.cc_weighted_marketshare} {self.total_marketshare}'
 
     def __repr__(self):
         return self.__str__()

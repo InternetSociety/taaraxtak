@@ -140,12 +140,12 @@ def extract_from_row_country(market: str, date: pd.Timestamp, df_row: pd.Series)
     Takes a row of a country marketshare dataframe and returns CountryMarketshare.
     `market` and `time` are the first parameters because we partially apply them.
     '''
-    juris, weight, cc_marketshare, cc_weighted_marketshare, total_marketshare, date = df_row.values
+    juris, weight, cc_marketshare, cc_marketshare_weighted, cc_weighted_marketshare, total_marketshare, date = df_row.values
     # NOTE - This type does ALL the validation.
     # Once data is in this type, it *should* be trustworthy.
     # See /design-notes.md for more detail on this pattern.
     return CountryMarketshare(
-        date, shared_types.Alpha2(juris), 'all', market, float(cc_marketshare), float(cc_weighted_marketshare), float(total_marketshare)
+        date, shared_types.Alpha2(juris), 'all', market, float(cc_marketshare), float(cc_marketshare_weighted), float(cc_weighted_marketshare), float(total_marketshare)
     )
 
 #
@@ -298,7 +298,8 @@ def country_marketshare(cur: cursor, measurement_scope: str, market: str, time: 
     # the intention here is to get the gini among only countries that provide services,
     # excluding those that provide no services.
     merged.rename(columns = {'marketshare':'cc_marketshare'}, inplace = True)
-    merged["cc_weighted_marketshare"] = merged.cc_marketshare / merged.loc[:, relevant_year]
+    merged["cc_marketshare_weighted"] = merged.cc_marketshare / merged.loc[:, relevant_year]
+    merged["cc_weighted_marketshare"] = merged.cc_marketshare_weighted / merged.cc_marketshare_weighted.sum()
     merged["total_marketshare"] = merged.cc_marketshare.sum()
     merged["date"] = pd.to_datetime(time)
     merged.reset_index(inplace=True)

@@ -9,7 +9,7 @@ import psycopg2
 import logging
 import pandas as pd
 import sys
-sys.path.append("/Users/madofo/git/InternetSociety/taaraxtak/")
+sys.path.append("/home/pulse/taaraxtak/")
 
 from os.path import join
 from os import listdir

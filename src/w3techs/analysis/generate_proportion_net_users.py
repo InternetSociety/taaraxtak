@@ -45,6 +45,8 @@ def compute_internet_users():
         .fillna(method='ffill', axis=1)\
         .fillna(method='bfill', axis=1)\
         .astype(float)
+    # remove any NaNs that remain
+    internet_users = internet_users.fillna(0)
     # Add back in Alpha 3 axis
     internet_users['Country Code'] = populations['Country Code']
     return internet_users

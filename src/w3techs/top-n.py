@@ -9,13 +9,14 @@ import psycopg2
 import logging
 import pandas as pd
 import sys
-sys.path.append("/home/pulse/taaraxtak/")
+sys.path.append("/Users/madofo/git/InternetSociety/taaraxtak/")
 
 from os.path import join
 from os import listdir
 from src.shared.utils import get_country
 from datetime import datetime
 from config import config
+from funcy import partial
 # from imp import reload
 
 postgres_config = config['postgres']
@@ -75,7 +76,7 @@ date=year+'-'+month+'-02'
 time=pd.Timestamp(date)
 
 dfs = []
-for my_dir in listdir('top-sites'):
+for my_dir in listdir('top-sites/' + year + month):
     fn = my_dir.split('.csv')[0]
     if fn.split('-')[1]!='hierarchy':
         if fn.split('-')[0] in included_fn_markets:
@@ -83,7 +84,7 @@ for my_dir in listdir('top-sites'):
                 market, top_n, date_str  = fn.split('-')
                 date = datetime.strptime(date_str, '%Y%m')
                 print(market, top_n, date)
-                df = pd.read_csv(join('top-sites', my_dir))
+                df = pd.read_csv(join('top-sites', year + month, my_dir))
                 df = parse_df(df)
                 df['measurement_scope'] = top_n
                 df['market'] = market
@@ -101,7 +102,7 @@ df.market = df.market.replace({
     'top_level_domain': 'top-level-domain',
 })
 
-df.to_csv('out/top-sites-combined.csv')
+df.to_csv('out/' + year + month + '-top-sites-combined.csv')
 
 import src.w3techs.types
 # reload(src.w3techs.types)
@@ -144,3 +145,10 @@ for measurement_scope in included_scopes:
             provider_gini.write_to_db(cur, conn)
         else:
             print(f'[ ] provider-based {market}')
+        country_marketshares = utils.country_marketshare(cur, measurement_scope, market, time)
+        print(f'[X] Country marketshare {market}')
+        extract = partial(utils.extract_from_row_country, market, time)
+        countries = country_marketshares.apply(extract, axis=1)
+        for country in countries:
+            print(country)
+            country.write_to_db(cur, conn)

@@ -144,7 +144,7 @@ def collect(postgres_config: dict):
             # Compute country marketshares
             logger.info(f'Computing country marketshares for {market}')
             country_marketshares = utils.country_marketshare(cur, 'all', market, pd.Timestamp(datetime.now()))
-            extract = partial(utils.extract_from_row_country, market, pd.Timestamp(datetime.now()))
+            extract = partial(utils.extract_from_row_country, market, pd.Timestamp(datetime.now()), 'all')
             countries = country_marketshares.apply(extract, axis=1)
             for country in countries:
                 country.write_to_db(cur, conn)

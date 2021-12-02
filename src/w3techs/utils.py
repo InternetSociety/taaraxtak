@@ -135,7 +135,7 @@ def extract_from_row(market: str, time: pd.Timestamp, df_row: pd.Series) -> Prov
         str(name), str(url), juris, 'all', market, float(marketshare), time
     )
 
-def extract_from_row_country(market: str, date: pd.Timestamp, df_row: pd.Series) -> CountryMarketshare:
+def extract_from_row_country(market: str, date: pd.Timestamp, measurement_scope: str, df_row: pd.Series) -> CountryMarketshare:
     '''
     Takes a row of a country marketshare dataframe and returns CountryMarketshare.
     `market` and `time` are the first parameters because we partially apply them.
@@ -145,7 +145,7 @@ def extract_from_row_country(market: str, date: pd.Timestamp, df_row: pd.Series)
     # Once data is in this type, it *should* be trustworthy.
     # See /design-notes.md for more detail on this pattern.
     return CountryMarketshare(
-        date, shared_types.Alpha2(juris), 'all', market, float(cc_marketshare), float(cc_marketshare_weighted), float(cc_weighted_marketshare), float(total_marketshare)
+        date, shared_types.Alpha2(juris), measurement_scope, market, float(cc_marketshare), float(cc_marketshare_weighted), float(cc_weighted_marketshare), float(total_marketshare)
     )
 
 #

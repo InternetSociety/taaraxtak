@@ -11,6 +11,8 @@ import pandas as pd
 import sys
 sys.path.append("/home/pulse/taaraxtak/")
 
+import src.w3techs.utils as utils
+
 from os.path import join
 from os import listdir
 from src.shared.utils import get_country
@@ -18,6 +20,11 @@ from datetime import datetime
 from config import config
 from funcy import partial
 # from imp import reload
+
+# import src.w3techs.types
+# reload(src.w3techs.types)
+from src.w3techs.types import ProviderMarketshare
+from src.shared.types import Alpha2
 
 postgres_config = config['postgres']
 conn = psycopg2.connect(**postgres_config)
@@ -104,11 +111,6 @@ df.market = df.market.replace({
 
 df.to_csv('out/' + year + month + '-top-sites-combined.csv')
 
-import src.w3techs.types
-# reload(src.w3techs.types)
-from src.w3techs.types import ProviderMarketshare
-from src.shared.types import Alpha2
-
 for i, row in df.iterrows():
     try:
         alpha2 = Alpha2(row.jurisdiction_alpha2)
@@ -126,8 +128,6 @@ for i, row in df.iterrows():
     marketshare.write_to_db(cur, conn, commit=False)
 
 conn.commit()
-
-import src.w3techs.utils as utils
 
 print(time)
 for measurement_scope in included_scopes:
@@ -147,8 +147,7 @@ for measurement_scope in included_scopes:
             print(f'[ ] provider-based {market}')
         country_marketshares = utils.country_marketshare(cur, measurement_scope, market, time)
         print(f'[X] Country marketshare {market}')
-        extract = partial(utils.extract_from_row_country, market, time)
+        extract = partial(utils.extract_from_row_country, market, time, measurement_scope)
         countries = country_marketshares.apply(extract, axis=1)
         for country in countries:
-            print(country)
             country.write_to_db(cur, conn)

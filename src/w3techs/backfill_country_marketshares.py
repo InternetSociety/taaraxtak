@@ -140,7 +140,7 @@ def collect(postgres_config: dict):
             logging.info(f'Computing country marketshares for {market}')
             country_marketshares = utils.country_marketshare(cur, 'all', market, pd.Timestamp(start_date))
             if country_marketshares is not None:
-                extract = partial(utils.extract_from_row_country, market, pd.Timestamp(start_date))
+                extract = partial(utils.extract_from_row_country, market, pd.Timestamp(start_date), 'all')
                 countries = country_marketshares.apply(extract, axis=1)
                 if countries is not None:
                     for country in countries:

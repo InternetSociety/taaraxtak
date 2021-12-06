@@ -247,6 +247,7 @@ def country_gini(cur: cursor, measurement_scope: str, market: str, time: pd.Time
     if int(relevant_year) > 2021:
         relevant_year='2021'
     pop_share_df = prop_net_users[relevant_year].fillna(0)
+    pop_share_df = pop_share_df[pop_share_df != 0]
     # weight marketshare
     merged = pd.DataFrame(pop_share_df).merge(by_juris,
                                               left_index=True,
@@ -289,6 +290,7 @@ def country_marketshare(cur: cursor, measurement_scope: str, market: str, time: 
     if int(relevant_year) > 2021:
         relevant_year='2021'
     pop_share_df = prop_net_users[relevant_year].fillna(0)
+    pop_share_df = pop_share_df[pop_share_df != 0]
     # weight marketshare
     merged = pd.DataFrame(pop_share_df).merge(by_juris,
                                               left_index=True,

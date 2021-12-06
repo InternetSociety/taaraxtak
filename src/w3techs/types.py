@@ -155,13 +155,13 @@ class CountryMarketshare():
         assert(shared_utils.is_nonempty_str(market))
         self.market = market
 
-        assert(is_float_0_1(cc_marketshare))
+        assert(is_float_0(cc_marketshare))
         self.cc_marketshare = cc_marketshare
 
         assert(is_float_0(cc_marketshare_weighted))
         self.cc_marketshare_weighted = cc_marketshare_weighted
         
-        assert(is_float_0_1(cc_weighted_marketshare))
+        assert(is_float_0(cc_weighted_marketshare))
         self.cc_weighted_marketshare = cc_weighted_marketshare
 
         assert(is_float_0_2(total_marketshare))

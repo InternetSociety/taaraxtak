@@ -91,7 +91,7 @@ for my_dir in listdir('top-sites/' + year + month):
                 market, top_n, date_str  = fn.split('-')
                 date = datetime.strptime(date_str, '%Y%m')
                 print(market, top_n, date)
-                df = pd.read_csv(join('top-sites', year + month, my_dir))
+                df = pd.read_csv(join('top-sites', year + month, my_dir), header=None)
                 df = parse_df(df)
                 df['measurement_scope'] = top_n
                 df['market'] = market

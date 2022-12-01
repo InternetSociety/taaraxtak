@@ -180,7 +180,7 @@ def fetch_by_jurisdiction(cur: cursor, measurement_scope: str, market: str,  dat
     rows = fetch_rows(cur, measurement_scope, market, date)
     rows['marketshare'] = rows['marketshare'].astype(float)
     # in case we have the same name and jurisidiction repeated, we take the median marketshare
-    rows = rows.groupby(['name', 'jurisdiction_alpha2']).median()
+    rows = rows.groupby(['name', 'jurisdiction_alpha2']).median(numeric_only=True)
     # then group by each jurisdiction and take the sum of its marketshare
     rows = rows.groupby('jurisdiction_alpha2').sum()
     return rows
@@ -193,7 +193,7 @@ def fetch_by_market(cur: cursor, measurement_scope: str, market: str,  date: pd.
     rows = fetch_rows(cur, measurement_scope, market, date)
     rows['marketshare'] = rows['marketshare'].astype(float)
     # in case we have the same name repeated, we take the median marketshare
-    rows = rows.groupby('name').median()
+    rows = rows.groupby('name').median(numeric_only=True)
     # then group by provider name and take the sum of its marketshare
     rows = rows.groupby('name').sum()
     return rows

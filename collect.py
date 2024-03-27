@@ -22,8 +22,7 @@ from config import config
 #
 # setup
 #
-configure_logging()
-logger = logging.getLogger("taaraxtak:collect")
+logger = configure_logging()
 
 # connect to the db
 postgres_config = config['postgres']

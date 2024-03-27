@@ -79,11 +79,11 @@ def configure_logging():
         structlog.processors.TimeStamper(fmt="iso"),
     ]
 
-    if config.log_file is not None:
+    if config["log_file"] is not None:
         processors.append(structlog.processors.JSONRenderer())
         structlog.configure(
             processors=processors,
-            logger_factory=structlog.WriteLoggerFactory(file=Path(config.log_file).with_suffix(".log").open("wt")),
+            logger_factory=structlog.WriteLoggerFactory(file=Path(config["log_file"]).with_suffix(".log").open("wt")),
         )
     else:
         processors.append(structlog.dev.ConsoleRenderer())

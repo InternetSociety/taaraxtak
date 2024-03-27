@@ -17,8 +17,7 @@ from src.shared.utils import configure_logging
 # In[2]:
 
 
-configure_logging()
-logger = logging.getLogger("poll-ooni")
+logger = configure_logging()
 
 
 # In[40]:

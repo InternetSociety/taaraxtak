@@ -17,8 +17,7 @@ from src.shared.utils import configure_logging
 #
 # setup
 #
-configure_logging()
-logger = logging.getLogger("taaraxtak:create_tables")
+logger = configure_logging()
 
 # connect to the db
 connection = psycopg2.connect(**config['postgres'])

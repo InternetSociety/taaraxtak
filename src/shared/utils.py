@@ -3,13 +3,14 @@ import pandas as pd
 import logging
 from os.path import join
 import pytz
-from datetime import datetime
+from datetime import datetime, date
 import threading
+from pathlib import Path
 
 from typing import Optional
 
 from config import config
-import coloredlogs
+import structlog
 
 #
 # Time
@@ -63,18 +64,32 @@ def get_country(provider_name: str) -> Optional[str]:
 
 
 def configure_logging():
-    logging_config = config['logging']
-    log_level = logging_config['level']
-    if logging_config['handler'] == 'file':
-        logging.basicConfig(level=log_level, filename=logging_config['file'], format=logging_config['format'])
+    def convert_datetimes(_logger, _log_method, event_dict):
+        for k in event_dict:
+            if isinstance(event_dict[k], date):
+                event_dict[k] = str(event_dict[k])
+        return event_dict
+
+
+    processors = [
+        structlog.processors.add_log_level,
+        convert_datetimes,
+        structlog.processors.StackInfoRenderer(),
+        structlog.dev.set_exc_info,
+        structlog.processors.TimeStamper(fmt="iso"),
+    ]
+
+    if config.log_file is not None:
+        processors.append(structlog.processors.JSONRenderer())
+        structlog.configure(
+            processors=processors,
+            logger_factory=structlog.WriteLoggerFactory(file=Path(config.log_file).with_suffix(".log").open("wt")),
+        )
     else:
-        logging.basicConfig(level=log_level)
-        coloredlogs.install()
-        coloredlogs.install(level=log_level)
-    # Schedule lib logs out params (including db creds) by default so set this to WARNING and above
-    logging.getLogger("schedule").setLevel(logging.WARNING)
-    # disable noisy logging by filelock (called by TLDExtract to deal with its cache)
-    logging.getLogger("filelock").setLevel(logging.ERROR)
+        processors.append(structlog.dev.ConsoleRenderer())
+        structlog.configure(processors=processors)
+
+    return structlog.get_logger()
 
 
 def run_threaded(job_func):

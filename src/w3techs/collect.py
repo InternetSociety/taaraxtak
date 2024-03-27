@@ -7,13 +7,13 @@
 # (see file by the same name in repository's root).
 
 import psycopg2
-import logging
 import pandas as pd
 from funcy import partial
 from datetime import datetime
+from src.shared.utils import configure_logging
 
 
-logger = logging.getLogger("src.w3techs.collect")
+logger = configure_logging()
 
 
 import src.w3techs.utils as utils

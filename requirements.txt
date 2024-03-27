@@ -2,7 +2,7 @@ beautifulsoup4==4.9.3
 coloredlogs==15.0
 coverage==5.5
 funcy==1.15
-numpy==1.19.5
+numpy~=1.26
 pandas==1.1.5
 python-dateutil==2.8.1
 pytz==2021.1
@@ -15,5 +15,5 @@ geoip2==4.2.0
 tldextract==3.1.0
 idna==2.10
 idna-ssl==1.1.0
-psycopg2-binary==2.9.1
+psycopg2~=2.9.0
 

@@ -64,6 +64,15 @@ def get_country(provider_name: str) -> Optional[str]:
 
 
 def configure_logging():
+    def set_message(_logger, _log_method, event_dict):
+        if event_dict["event"]:
+            event_dict["message"] = event_dict["event"]
+            del event_dict["event"]
+        else:
+            event_dict["message"] = "No log message set"
+        return event_dict
+
+
     def convert_datetimes(_logger, _log_method, event_dict):
         for k in event_dict:
             if isinstance(event_dict[k], date):
@@ -75,6 +84,7 @@ def configure_logging():
         structlog.processors.add_log_level,
         convert_datetimes,
         structlog.processors.StackInfoRenderer(),
+        set_message,
         structlog.dev.set_exc_info,
         structlog.processors.TimeStamper(fmt="iso"),
     ]

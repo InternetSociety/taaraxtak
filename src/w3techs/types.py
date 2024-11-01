@@ -20,8 +20,8 @@ def is_float_0(my_float: float) -> bool:
 def is_float_0_1(my_float: float) -> bool:
     return (type(my_float) == float) & (my_float >= 0) & (my_float <= 1)
 
-def is_float_0_2(my_float: float) -> bool:
-    return (type(my_float) == float) & (my_float >= 0) & (my_float <= 2)
+def is_float_0_3(my_float: float) -> bool:
+    return (type(my_float) == float) & (my_float >= 0) & (my_float <= 3)
 
 def validate_measurement_scope (s: str) -> bool:
     return (
@@ -164,7 +164,7 @@ class CountryMarketshare():
         assert(is_float_0(cc_weighted_marketshare))
         self.cc_weighted_marketshare = cc_weighted_marketshare
 
-        assert(is_float_0_2(total_marketshare))
+        assert(is_float_0_3(total_marketshare))
         self.total_marketshare = total_marketshare
 
     def create_table(
